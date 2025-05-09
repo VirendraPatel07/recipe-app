@@ -8,7 +8,7 @@ function App() {
   const dispatch = useDispatch();
   const recipeData = useSelector((state: any) => state.app.recipes);
   const status = useSelector((state: { app: { status: string } }) => state.app.status);
-  const error = useSelector((state: { app: { error: string } }) => state.app.error);
+  // const error = useSelector((state: { app: { error: string } }) => state.app.error);
 
   useEffect(() => {
     if (status === 'fulfilled' && recipeData === null) {

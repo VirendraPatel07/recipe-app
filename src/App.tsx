@@ -5,10 +5,10 @@ import { fetchRecipe, clearRecipe } from './AppSlice'
 function App() {
   const [count, setCount] = useState(0)
   const [recipe, setRecipe] = useState<string>('');
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<typeof import('./redux/store').store.dispatch>();
   const recipeData = useSelector((state: any) => state.app.recipes);
   const status = useSelector((state: { app: { status: string } }) => state.app.status);
-  const error = useSelector((state: { app: { error: string } }) => state.app.error);
+  // const error = useSelector((state: { app: { error: string } }) => state.app.error);
  
   return (
     <>
