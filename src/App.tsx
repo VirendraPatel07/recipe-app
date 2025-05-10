@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       <h2 className='text-4xl text-center mt-10'><b>FOOD RECIPE APP</b></h2>
-      <div className='container sm:w-d grid justify-center items-center mx-50 mt-10 gap-10'>
+      <div className='container grid justify-center items-center mx-50 mt-10 gap-10'>
         <div className="card flex justify-center bg-gray-200 rounded-2xl p-10">  
           <input type="text" 
             className='bg-gray-300 text-2xl mx-10 px-4 py-2 rounded-2xl'
