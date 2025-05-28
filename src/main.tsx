@@ -1,18 +1,46 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import  store  from './redux/store'
 import './index.css'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App.tsx'
-import Header from './Header.tsx'
-import Footer from './Footer.tsx'
+import Home from './components/Home/Home.tsx'
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App/>,
+    children: [
+      {
+        path:'',
+        element: <Home/>,
+      },
+      {
+        path: 'about',
+        element: <div className='text-center mt-20'>About</div>
+      },
+      { 
+        path: 'contact',
+        element: <div className='text-center mt-20'>Contact</div>
+      },
+      { 
+        path: 'privacy-policy',
+        element: <div className='text-center mt-20'>Privacy Policy</div>
+      },
+      {
+        path: 'terms-of-service',
+        element: <div className='text-center mt-20'>Terms of Service</div>
+      },
+      {
+        path: 'help',
+        element: <div className='text-center mt-20'>Help</div>
+      },
+    ]
+  }
+])
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
     <Provider store ={store}>
-      <Header />
-      <App />
-      <Footer />
+      <RouterProvider router={router}/>
     </Provider>
-  </StrictMode>,
 )
