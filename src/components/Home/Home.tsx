@@ -60,7 +60,8 @@ function App() {
         }
         />
         <button
-          className='text-white bg-amber-600 hover:bg-amber-900 rounded-2xl px-2 py-1'
+          className='text-white bg-amber-600 hover:bg-amber-900 rounded-2xl px-2 py-1 
+          transition-shadow duration-300 ease-in-out'
           onClick={(e) => {
             e.preventDefault()
             // dispatch(fetchRecipeBySearch(recipe))
@@ -94,8 +95,9 @@ function App() {
         <div className='card bg-gray-200 rounded-2xl p-5 w-full max-w-4xl mx-auto'>
             <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
               {((filteredData) ? filteredData : recipeData).map((item: any) => (
-                <div key={item.idMeal} className='bg-gray-300 hover:bg-green-50 hover:w-19/18 hover:h-40/39 rounded-2xl p-4 w-full'>
-                  <img
+                <div key={item.idMeal} className='bg-gray-300 hover:bg-green-50 hover:scale-105 rounded-2xl p-4 w-full 
+                transition-transform ease-in-out'>
+                  <img 
                     src={item.strMealThumb !== null ? item.strMealThumb : '/images/Apple animated.gif'}
                     alt={item.strMeal}
                     className='rounded-2xl mb-4 w-full h-40 object-cover'
@@ -108,7 +110,7 @@ function App() {
               ))}
             </div>
 
-          <button
+          {/* <button
             className='text-white bg-amber-600 hover:bg-amber-900 rounded-2xl px-2 py-1 mt-4'
             onClick={() => {
               dispatch(clearRecipe())
@@ -116,7 +118,7 @@ function App() {
             }}
           >
             Clear
-          </button>
+          </button> */}
         </div>
       )}
       </div>

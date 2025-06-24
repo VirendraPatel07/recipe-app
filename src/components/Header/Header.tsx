@@ -51,7 +51,7 @@ function Header() {
 
     return (
         <>
-            <div className='fixed top-0 flex items-center justify-between bg-gray-200 w-full p-2'>
+            <div className='fixed top-0 flex items-center justify-between bg-gray-200 w-full p-2 z-10'>
                 <div>
                     <img src='/images/Ladyfinger.jpeg' alt='logo' className='w-10 h-10 rounded-xl' />
                 </div>
@@ -73,26 +73,25 @@ function Header() {
                     </button>
                 )}
             </div>
-
-            {/* Sidebar */}
-            {isSidebarOpen && (
-                <div className={`fixed top-0 right-0 w-50 bg-gray-100 text-black p-5 z-50`}>
-                    <button
-                        onClick={toggleSidebar}
-                        className='bg-gray-300 p-1 rounded-md mb-4'
-                    >
-                        ✕
-                    </button>
-                    <ul className='grid gap-2'>
-                    <li><NavLink to='/'>Home</NavLink></li>
-                        <li><NavLink to='/about'>About</NavLink></li>
-                        <li><NavLink to='/contact'>Contact</NavLink></li>
-                        <li><NavLink to='/privacy-policy'>Privacy Policy</NavLink></li>
-                        <li><NavLink to='/terms-of-service'>Terms of Service</NavLink></li>
-                        <li><NavLink to='/help'>Help</NavLink></li>
-                    </ul>
-                </div>
-            )}
+            <div
+                className={`fixed top-0 right-0 bg-gray-100 text-black p-5 z-50 rounded-2xl
+                transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                >
+                <button
+                    onClick={toggleSidebar}
+                    className='bg-gray-300 p-1 rounded-md mb-4'
+                >
+                    ✕
+                </button>
+                <ul className='grid gap-2'>
+                <li><NavLink to='/'>Home</NavLink></li>
+                    <li><NavLink to='/about'>About</NavLink></li>
+                    <li><NavLink to='/contact'>Contact</NavLink></li>
+                    <li><NavLink to='/privacy-policy'>Privacy Policy</NavLink></li>
+                    <li><NavLink to='/terms-of-service'>Terms of Service</NavLink></li>
+                    <li><NavLink to='/help'>Help</NavLink></li>
+                </ul>
+            </div>
         </>
     );
 }
