@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchRecipe, clearRecipe } from './slice/HomeSlice'
+import { fetchRecipe } from './slice/HomeSlice'
 
 function App() {
   //const [count, setCount] = useState(0)
