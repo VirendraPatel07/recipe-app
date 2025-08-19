@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const fetchRecipe = createAsyncThunk<any[], string>(
-    'recipe/fetchRecipe',
+export const fetchRecipes = createAsyncThunk<any[], string>(
+    'recipe/fetchRecipes',
     async (recipe) => {
         const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${recipe}`);
         if(!response.ok){
@@ -11,18 +11,6 @@ export const fetchRecipe = createAsyncThunk<any[], string>(
         return data.meals;
     }
 );
-
-export const fetchRecipeBySearch = createAsyncThunk<any[], string>(
-    'recipe/fetchRecipeBySearch',
-    async(recipe) => {
-        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${recipe}`);
-        if(!response.ok){
-            throw new Error('Sorry, we could not find any recipe for you!');
-        }
-        const data = await response.json();
-        return data.meals;
-    }
-)
 
 const initialState: { 
     recipes: any[],
@@ -34,7 +22,7 @@ const initialState: {
     error: null,
 };
 
-const recipeSlice = createSlice({
+const recipesSlice = createSlice({
     name: 'recipe',
     initialState,
     reducers: {
@@ -46,28 +34,22 @@ const recipeSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchRecipe.pending, (state)=>{
+            .addCase(fetchRecipes.pending, (state)=>{
                 state.status = 'pending';
                 state.error = null;
             })
-            .addCase(fetchRecipe.fulfilled, (state, action) =>{
+            .addCase(fetchRecipes.fulfilled, (state, action) =>{
                 state.status = 'fulfilled';
-                // state.recipes = action.payload;
                 state.recipes = action.payload !== null ? state.recipes.concat(action.payload) : state.recipes;
                 state.error = null;
             })
-            .addCase(fetchRecipe.rejected, (state, action) => {
+            .addCase(fetchRecipes.rejected, (state, action) => {
                 state.status = 'rejected';
                 state.error = action.error.message ?? null;
             })
-            .addCase(fetchRecipeBySearch.fulfilled, (state, action) => {
-                state.status = 'fulfilled';
-                state.recipes = action.payload;
-                state.error = null;
-        })
     },
 });
 
 
-export const { clearRecipe } = recipeSlice.actions;
-export default recipeSlice.reducer;
+export const { clearRecipe } = recipesSlice.actions;
+export default recipesSlice.reducer;

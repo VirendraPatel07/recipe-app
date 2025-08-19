@@ -5,6 +5,7 @@ import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App.tsx'
 import Home from './components/Home/Home.tsx'
+import Recipe from './components/Recipe/Recipe.tsx'
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         path:'',
         element: <Home/>,
+      },
+      {
+        path:'recipe/:id',
+        element: <Recipe/>,
       },
       {
         path: 'about',
