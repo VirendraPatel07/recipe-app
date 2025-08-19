@@ -5,7 +5,7 @@ export const fetchRecipe = createAsyncThunk<any[], string>(
     async (id) => {
         const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
         if(!response.ok){
-            throw new Error('Sorry, we could not find any recipe for you!');
+            throw new Error('Sorry !!!, we could not find any recipe for you!');
         }
         const data = await response.json();
         return data.meals;
