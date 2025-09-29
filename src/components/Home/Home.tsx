@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchRecipes } from './slice/HomeSlice'
 import { NavLink } from 'react-router-dom';
+import { createRecipeDTO } from './domain/home-model';
 
-function App() {
+function Home() {
   //const [count, setCount] = useState(0)
   const [recipe, setRecipe] = useState<string>('');
   const dispatch = useDispatch<typeof import('../../redux/store').store.dispatch>();
@@ -11,6 +12,7 @@ function App() {
   const status = useSelector((state: { app: { status: string } }) => state.app.status);
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
   const [filteredData, setFilteredData] = useState<any[] | false>(false);
+  const [boughtItems, setBoughtItems] = useState<any[]>([]);
   // const error = useSelector((state: { app: { error: string } }) => state.app.error);
 
   useEffect(() => {
@@ -34,6 +36,26 @@ function App() {
     } else {
       setFilteredData([]);
     }
+  };
+
+  const sendRecipesToAPI = () => {
+    //const recipeDTOs = boughtItems.map((item: any) => createRecipeDTO(item.strMeal));
+    const recipeDTOs = boughtItems.pop();
+    fetch('http://localhost:5000/milestoneMDM',{
+        method : 'POST',
+        headers : {
+          'Content-Type' : 'application/json',
+          'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJQUk9KRUNUX0NSRUFUT1IiLCJBTExPV0VEX0VDSSIsIlVTRVIiLCJBRE1JTiIsIkFMTE9XRURfTlBNUyJdLCJpZCI6IjJkNTRiMmViLTA4ODctNGQyMC05YjhiLTliMzFlMzEzNDQ0MCIsInN1YiI6InJhbmRvbkBnbWFpbC5jb20iLCJpYXQiOjE3NTg5MzcxMDEsImV4cCI6MTc1ODk0MDcwMX0.v4Wm1BeBCkQ4NafPUF8QF5fI_mnZR_248sS-BpqMIn8'
+        },
+        body: JSON.stringify(recipeDTOs),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Response from API:',data)
+        })
+        .catch((error) => {
+          console.error('Error in sending bought recipes')
+        })
   };
 
  
@@ -116,13 +138,31 @@ function App() {
                   </NavLink>
                   <input
                     type='text'
+                    id={`quantity-${item.idMeal}`}
                     className='bg-white-300 px-2 rounded-2xl w-full mb-2 border border-green-400 focus:border-green-600
                     focus:outline-none focus:ring-2 focus:ring-green-600'
                     placeholder="Enter quantity in grams"
+                  
                   ></input>
                   <button 
                   className='bg-green-600 hover:bg-green-900 text-white rounded-2xl px-2 py-1 w-full'
-                  onClick={() => alert(`Added ${item.strMeal} to cart!`)}
+                  id={`add-to-cart-${item.idMeal}`}
+                  onClick={() => {
+                    if(boughtItems.includes(item)){
+                      alert(`You have already added ${item.strMeal} to cart!`);
+                    } else {
+                      setBoughtItems([...boughtItems, item]);
+                      //document.cookie = `cart=${JSON.stringify(boughtItems)}; path[]=/; max-age=86400`; // Cookie expires in 1 day
+                      const addToCartButton = document.getElementById(`add-to-cart-${item.idMeal}`);
+                      if (addToCartButton) {
+                        addToCartButton.innerText = 'Added';
+                      }
+                      alert(`Added ${item.strMeal} to cart!`);
+                      sendRecipesToAPI();
+                    }
+                      console.log(boughtItems);
+                    }
+                  }
                   >
                     Add to cart
                   </button>
@@ -136,4 +176,4 @@ function App() {
   )
 }
 
-export default App
+export default Home;

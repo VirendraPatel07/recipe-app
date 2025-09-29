@@ -50,6 +50,5 @@ const recipesSlice = createSlice({
     },
 });
 
-
 export const { clearRecipe } = recipesSlice.actions;
 export default recipesSlice.reducer;
