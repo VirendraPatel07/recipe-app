@@ -13,17 +13,62 @@ function Home() {
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
   const [filteredData, setFilteredData] = useState<any[] | false>(false);
   const [boughtItems, setBoughtItems] = useState<any[]>([]);
+  const [savedData, setSavedData] = useState<any[]>([]);
+
   // const error = useSelector((state: { app: { error: string } }) => state.app.error);
 
   useEffect(() => {
-    alphabet.split('').forEach((letter) => {
-      if (letter === '') {
-        return;
-      } else {
-        dispatch(fetchRecipes(letter));
-      }
-    });
+    
+    const saveData = sessionStorage.getItem("savedData");
+    if(saveData){
+      setSavedData(JSON.parse(saveData));
+    } else {
+    //   alphabet.split('').forEach((letter) => {
+    //     if (letter === '') {
+    //       return;
+    //     } else {
+    //       dispatch(fetchRecipes(letter));
+    //     }
+    //   });
+    //   sessionStorage.setItem("savedData", JSON.stringify(recipeData));
+    //   setSavedData(recipeData);
+    //   console.log(recipeData);
+       
+        const fetchData = async () => {
+        try {
+          // map returns an array of promises
+          const promises = alphabet.split('').map(async (letter) => {
+            const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`);
+            const data = await res.json();
+            return data.meals || [];
+          });
+  
+          // Wait for all to finish
+          const results = await Promise.all(promises);
+  
+          // Flatten the array of arrays
+          const combined = results.flat();
+  
+          // Save in state
+          setSavedData(combined);
+          sessionStorage.setItem("savedData", JSON.stringify(combined));
+
+        } catch (error) {
+          console.error("Error fetching recipes:", error);
+        }
+      };
+      fetchData(); 
+    }
+
+    const boughtitems = localStorage.getItem("boughtItems");
+    if(boughtitems){
+      setBoughtItems(JSON.parse(boughtitems));
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("boughtItems", JSON.stringify(boughtItems));
+  }, [boughtItems]);
 
   const filterData = () => {
     if(recipeData && recipeData.length > 0) {
@@ -32,31 +77,30 @@ function Home() {
       ));
       setFilteredData([]);
       setFilteredData(filtered);
-      // recipeData = filtered; // Removed as recipeData is a constant
     } else {
       setFilteredData([]);
     }
   };
 
-  const sendRecipesToAPI = () => {
-    //const recipeDTOs = boughtItems.map((item: any) => createRecipeDTO(item.strMeal));
-    const recipeDTOs = boughtItems.pop();
-    fetch('http://localhost:5000/milestoneMDM',{
-        method : 'POST',
-        headers : {
-          'Content-Type' : 'application/json',
-          'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJQUk9KRUNUX0NSRUFUT1IiLCJBTExPV0VEX0VDSSIsIlVTRVIiLCJBRE1JTiIsIkFMTE9XRURfTlBNUyJdLCJpZCI6IjJkNTRiMmViLTA4ODctNGQyMC05YjhiLTliMzFlMzEzNDQ0MCIsInN1YiI6InJhbmRvbkBnbWFpbC5jb20iLCJpYXQiOjE3NTg5MzcxMDEsImV4cCI6MTc1ODk0MDcwMX0.v4Wm1BeBCkQ4NafPUF8QF5fI_mnZR_248sS-BpqMIn8'
-        },
-        body: JSON.stringify(recipeDTOs),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('Response from API:',data)
-        })
-        .catch((error) => {
-          console.error('Error in sending bought recipes')
-        })
-  };
+  // const sendRecipesToAPI = () => {
+  //   //const recipeDTOs = boughtItems.map((item: any) => createRecipeDTO(item.strMeal));
+  //   const recipeDTOs = boughtItems.pop();
+  //   fetch('http://localhost:5000/milestoneMDM',{
+  //       method : 'POST',
+  //       headers : {
+  //         'Content-Type' : 'application/json',
+  //         'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJQUk9KRUNUX0NSRUFUT1IiLCJBTExPV0VEX0VDSSIsIlVTRVIiLCJBRE1JTiIsIkFMTE9XRURfTlBNUyJdLCJpZCI6IjJkNTRiMmViLTA4ODctNGQyMC05YjhiLTliMzFlMzEzNDQ0MCIsInN1YiI6InJhbmRvbkBnbWFpbC5jb20iLCJpYXQiOjE3NTg5MzcxMDEsImV4cCI6MTc1ODk0MDcwMX0.v4Wm1BeBCkQ4NafPUF8QF5fI_mnZR_248sS-BpqMIn8'
+  //       },
+  //       body: JSON.stringify(recipeDTOs),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         console.log('Response from API:',data)
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error in sending bought recipes')
+  //       })
+  // };
 
  
   return (
@@ -108,7 +152,6 @@ function Home() {
         </button>
       </div>
       <h3 className='text-center font-bold'>Search and Get Recipes</h3>
-      {/* {status === 'pending' && <p className='text-center'>Loading...</p>} */}
       {status === 'pending' && <img src='/images/Apple animated.gif' alt='loading' className='w-20 h-20 rounded-2xl mx-auto' />}
       {status === 'rejected' && <p className='text-red-600 text-center'>No data found</p>}
       {status === 'fulfilled' && recipeData === null ? (
@@ -118,7 +161,7 @@ function Home() {
       ) : (
         <div className='card bg-gray-200 rounded-2xl p-5 w-full max-w-6xl mx-auto'>
             <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-              {((filteredData) ? filteredData : recipeData).map((item: any) => (
+              {((filteredData) ? filteredData : savedData ).map((item: any) => (
                 <div  
                   className='bg-gray-300 hover:bg-green-50 hover:scale-105 rounded-2xl p-4 w-full 
                   transition-transform ease-in-out shadow-md' key={item.idMeal}>
@@ -145,26 +188,26 @@ function Home() {
                   
                   ></input>
                   <button 
-                  className='bg-green-600 hover:bg-green-900 text-white rounded-2xl px-2 py-1 w-full'
-                  id={`add-to-cart-${item.idMeal}`}
-                  onClick={() => {
-                    if(boughtItems.includes(item)){
-                      alert(`You have already added ${item.strMeal} to cart!`);
-                    } else {
-                      setBoughtItems([...boughtItems, item]);
-                      //document.cookie = `cart=${JSON.stringify(boughtItems)}; path[]=/; max-age=86400`; // Cookie expires in 1 day
-                      const addToCartButton = document.getElementById(`add-to-cart-${item.idMeal}`);
-                      if (addToCartButton) {
-                        addToCartButton.innerText = 'Added';
+                    className='bg-green-600 hover:bg-green-900 text-white rounded-2xl px-2 py-1 w-full'
+                    id={`add-to-cart-${item.idMeal}`}
+                    onClick={() => {
+                      if(boughtItems.includes(item)){
+                        alert(`You have already added ${item.strMeal} to cart!`);
+                      } else {
+                        setBoughtItems([...boughtItems, item]);
+                        //document.cookie = `cart=${JSON.stringify(boughtItems)}; path[]=/; max-age=86400`; // Cookie expires in 1 day
+                        const addToCartButton = document.getElementById(`add-to-cart-${item.idMeal}`);
+                        if (addToCartButton) {
+                          addToCartButton.innerText = 'Added';
+                        }
+                        alert(`Added ${item.strMeal} to cart!`);
+                        //sendRecipesToAPI();
                       }
-                      alert(`Added ${item.strMeal} to cart!`);
-                      sendRecipesToAPI();
+                        //console.log(boughtItems);
+                      }
                     }
-                      console.log(boughtItems);
-                    }
-                  }
-                  >
-                    Add to cart
+                    >
+                      Add to cart
                   </button>
                 </div>
               ))}

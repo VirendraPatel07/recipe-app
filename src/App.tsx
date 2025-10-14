@@ -14,7 +14,6 @@ function App(){
     return (
         <>
             <Header/>
-            [/* The Outlet component is used to render the child routes defined in the router configuration. */]
             {isNavigating && <GlobalSpinner/>}
             <Outlet/>
             <Footer/>

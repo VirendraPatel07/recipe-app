@@ -63,6 +63,7 @@ function Header() {
                         <li><NavLink to='/privacy-policy'>Privacy Policy</NavLink></li>
                         <li><NavLink to='/terms-of-service'>Terms of Service</NavLink></li>
                         <li><NavLink to='/help'>Help</NavLink></li>
+                        <li><NavLink to='/cart'>Cart</NavLink></li>
                     </ul>
                 ) : (
                     <button
@@ -90,6 +91,7 @@ function Header() {
                     <li><NavLink to='/privacy-policy'>Privacy Policy</NavLink></li>
                     <li><NavLink to='/terms-of-service'>Terms of Service</NavLink></li>
                     <li><NavLink to='/help'>Help</NavLink></li>
+                    <li><NavLink to='/cart'>Cart</NavLink></li>
                 </ul>
             </div>
         </>
