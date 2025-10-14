@@ -56,12 +56,6 @@ function Recipe() {
             ) : (
                 status !== 'pending' && <p className="text-center">No recipe found.</p>
             )}
-
-
-
-
-
-
         </div>
     </div>
   );
