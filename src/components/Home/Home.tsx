@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { fetchRecipes } from './slice/HomeSlice'
+import { useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom';
-import { createBoughtItemDTO, createRecipeDTO } from './domain/home-model';
+import { createBoughtItemDTO } from './domain/home-model';
 
 function Home() {
   //const [count, setCount] = useState(0)
   const [recipe, setRecipe] = useState<string>('');
-  const dispatch = useDispatch<typeof import('../../redux/store').store.dispatch>();
+  // const dispatch = useDispatch<typeof import('../../redux/store').store.dispatch>();
   const recipeData = useSelector((state: any) => state.app.recipes);
   const status = useSelector((state: { app: { status: string } }) => state.app.status);
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
