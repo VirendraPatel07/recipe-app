@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchRecipes } from './slice/HomeSlice'
 import { NavLink } from 'react-router-dom';
-import { createRecipeDTO } from './domain/home-model';
+import { createBoughtItemDTO, createRecipeDTO } from './domain/home-model';
 
 function Home() {
   //const [count, setCount] = useState(0)
@@ -14,6 +14,7 @@ function Home() {
   const [filteredData, setFilteredData] = useState<any[] | false>(false);
   const [boughtItems, setBoughtItems] = useState<any[]>([]);
   const [savedData, setSavedData] = useState<any[]>([]);
+  //const [quantity, setQuantity] = useState<string>('');
 
   // const error = useSelector((state: { app: { error: string } }) => state.app.error);
 
@@ -174,35 +175,59 @@ function Home() {
                       alt={item.strMeal}
                       className='rounded-2xl mb-4 w-full h-40 object-cover'
                     />
-                    <div className='flex mb-4 justify-between mx-auto'>
-                      <h3 className='font-bold'>{item.strMeal}</h3>
-                      <h3><b><b>$</b>{item.idMeal/100}</b><b>/kg</b></h3>
+                    <h3 className='font-bold mb-2'>{item.strMeal}</h3>
+                    <div className='flex items-center mb-2'>
+                      <h2>Price : </h2>
+                      <h2 className='font-semibold items-center ml-2'>{item.price}</h2>
                     </div>
                   </NavLink>
                   <input
                     type='text'
                     id={`quantity-${item.idMeal}`}
+                    value={item.quantity}
                     className='bg-white-300 px-2 rounded-2xl w-full mb-2 border border-green-400 focus:border-green-600
                     focus:outline-none focus:ring-2 focus:ring-green-600'
                     placeholder="Enter quantity in grams"
-                  
+                    //onChange={(e) => (e.target.value)}
                   ></input>
                   <button 
                     className='bg-green-600 hover:bg-green-900 text-white rounded-2xl px-2 py-1 w-full'
                     id={`add-to-cart-${item.idMeal}`}
                     onClick={() => {
                       if(boughtItems.includes(item)){
-                        alert(`You have already added ${item.strMeal} to cart!`);
+                        alert(`You have already added "${item.strMeal}" to cart!`);
                       } else {
-                        setBoughtItems([...boughtItems, item]);
-                        //document.cookie = `cart=${JSON.stringify(boughtItems)}; path[]=/; max-age=86400`; // Cookie expires in 1 day
-                        const addToCartButton = document.getElementById(`add-to-cart-${item.idMeal}`);
-                        if (addToCartButton) {
-                          addToCartButton.innerText = 'Added';
+                        // const quantityInput = document.getElementById(`quantity-${item.idMeal}`);
+                        // if(quantityInput === null || quantityInput.nodeValue === ''){
+                        //   alert(`Not valid`);
+                        // }
+
+                        // const input = document.querySelector(`input[id="quantity-${item.idMeal}"]`);
+                        // const quantity = input?.nodeValue;
+
+                        // const input = document.getElementById(`quantity-${item.idMeal}`);
+                        // const quantityValue = input.value.trim();
+
+                        // if(input){
+                        //   alert(`you have entered ${quantity}`);
+                        // } else {
+
+                          const quantityValue = (document.getElementById(`quantity-${item.idMeal}`) as HTMLInputElement | null)?.value?.trim();
+                          const quantityNumber = quantityValue ? parseInt(quantityValue, 10) : 100;
+
+                          const boughtItem = createBoughtItemDTO(item, 100, quantityNumber);
+                          //console.log(boughtItem);
+                          setBoughtItems([...boughtItems, boughtItem]);
+
+                          //document.cookie = `cart=${JSON.stringify(boughtItems)}; path[]=/; max-age=86400`; // Cookie expires in 1 day
+                          const addToCartButton = document.getElementById(`add-to-cart-${item.idMeal}`);
+                          if (addToCartButton) {
+                            addToCartButton.innerText = 'Added';
+                          }
+                          alert(`Added "${item.strMeal}" to cart!`);
+                          //sendRecipesToAPI();
                         }
-                        alert(`Added ${item.strMeal} to cart!`);
-                        //sendRecipesToAPI();
-                      }
+                      //}
                         //console.log(boughtItems);
                       }
                     }

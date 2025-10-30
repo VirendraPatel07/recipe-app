@@ -8,6 +8,7 @@ function Cart() {
         if(boughtitems){
             setBoughtItems(JSON.parse(boughtitems));
         }
+        console.log(boughtitems)
     }, []);
     
 
@@ -29,6 +30,15 @@ function Cart() {
                                         alt={item.strMeal}
                                         className='rounded-2xl mb-4 w-full h-40 object-cover'
                                     />
+                                    <h3 className='font-bold justify-center mb-2'>{item.strMeal}</h3>
+                                    <div className='flex items-center'>
+                                        <h2>Price : </h2>
+                                        <h2 className='font-semibold items-center ml-2'> {item.price} Rs</h2>
+                                    </div>
+                                    <div className='flex items-center mb-2'>
+                                        <h2>Quantity : </h2>
+                                        <h2 className='font-semibold ml-2'>{item.quantity} g</h2>
+                                    </div>
                                     <button
                                         className='bg-green-600 hover:bg-green-900 text-white rounded-2xl px-2 py-1 w-full'
                                         id={`remove-from-cart-${item.idMeal}`}
