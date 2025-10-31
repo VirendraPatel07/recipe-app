@@ -37,22 +37,25 @@ function Home() {
         const fetchData = async () => {
         try {
           // map returns an array of promises
-          const promises = alphabet.split('').map(async (letter) => {
-            const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`);
-            const data = await res.json();
-            return data.meals || [];
-          });
+          // const promises = alphabet.split('').map(async (letter) => {
+          //   const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`);
+          //   const data = await res.json();
+          //   return data.meals || [];
+          // });
   
           // Wait for all to finish
-          const results = await Promise.all(promises);
+          // const results = await Promise.all(promises);
   
           // Flatten the array of arrays
-          const combined = results.flat();
+          // const combined = results.flat();
   
-          // Save in state
-          setSavedData(combined);
-          sessionStorage.setItem("savedData", JSON.stringify(combined));
+            const res = await fetch("http://localhost:8080/vegetable");
+            const data = await res.json();
 
+          // Save in state
+          setSavedData(data);
+          sessionStorage.setItem("savedData", JSON.stringify(data))
+          return data;
         } catch (error) {
           console.error("Error fetching recipes:", error);
         }
@@ -164,17 +167,17 @@ function Home() {
               {((filteredData) ? filteredData : savedData ).map((item: any) => (
                 <div  
                   className='bg-gray-300 hover:bg-green-50 hover:scale-105 rounded-2xl p-4 w-full 
-                  transition-transform ease-in-out shadow-md' key={item.idMeal}>
+                  transition-transform ease-in-out shadow-md' key={item.id}>
                   <NavLink
-                    to={`/recipe/${item.idMeal}`} 
-                    key={item.idMeal} 
+                    to={`/recipe/${item.id}`} 
+                    key={item.id} 
                    >
                     <img 
-                      src={item.strMealThumb !== null ? item.strMealThumb : '/images/Apple animated.gif'}
-                      alt={item.strMeal}
+                      src={item.vegetableImage !== null ? item.vegetableImage : '/images/placeholder-image.png'}
+                      alt={item.vegetableName}
                       className='rounded-2xl mb-4 w-full h-40 object-cover'
                     />
-                    <h3 className='font-bold mb-2'>{item.strMeal}</h3>
+                    <h3 className='font-bold mb-2'>{item.vegetableName}</h3>
                     <div className='flex items-center mb-2'>
                       <h2>Price : </h2>
                       <h2 className='font-semibold items-center ml-2'>{item.price}</h2>
@@ -182,7 +185,7 @@ function Home() {
                   </NavLink>
                   <input
                     type='text'
-                    id={`quantity-${item.idMeal}`}
+                    id={`quantity-${item.id}`}
                     value={item.quantity}
                     className='bg-white-300 px-2 rounded-2xl w-full mb-2 border border-green-400 focus:border-green-600
                     focus:outline-none focus:ring-2 focus:ring-green-600'
@@ -191,10 +194,10 @@ function Home() {
                   ></input>
                   <button 
                     className='bg-green-600 hover:bg-green-900 text-white rounded-2xl px-2 py-1 w-full'
-                    id={`add-to-cart-${item.idMeal}`}
+                    id={`add-to-cart-${item.id}`}
                     onClick={() => {
                       if(boughtItems.includes(item)){
-                        alert(`You have already added "${item.strMeal}" to cart!`);
+                        alert(`You have already added "${item.vegetableName}" to cart!`);
                       } else {
                         // const quantityInput = document.getElementById(`quantity-${item.idMeal}`);
                         // if(quantityInput === null || quantityInput.nodeValue === ''){
@@ -211,7 +214,7 @@ function Home() {
                         //   alert(`you have entered ${quantity}`);
                         // } else {
 
-                          const quantityValue = (document.getElementById(`quantity-${item.idMeal}`) as HTMLInputElement | null)?.value?.trim();
+                          const quantityValue = (document.getElementById(`quantity-${item.id}`) as HTMLInputElement | null)?.value?.trim();
                           const quantityNumber = quantityValue ? parseInt(quantityValue, 10) : 100;
 
                           const boughtItem = createBoughtItemDTO(item, 100, quantityNumber);
@@ -219,11 +222,11 @@ function Home() {
                           setBoughtItems([...boughtItems, boughtItem]);
 
                           //document.cookie = `cart=${JSON.stringify(boughtItems)}; path[]=/; max-age=86400`; // Cookie expires in 1 day
-                          const addToCartButton = document.getElementById(`add-to-cart-${item.idMeal}`);
+                          const addToCartButton = document.getElementById(`add-to-cart-${item.id}`);
                           if (addToCartButton) {
                             addToCartButton.innerText = 'Added';
                           }
-                          alert(`Added "${item.strMeal}" to cart!`);
+                          alert(`Added "${item.vegetableName}" to cart!`);
                           //sendRecipesToAPI();
                         }
                       //}
