@@ -49,7 +49,7 @@ function Home() {
           // Flatten the array of arrays
           // const combined = results.flat();
   
-            const res = await fetch("http://localhost:8080/vegetable");
+            const res = await fetch("http://recipe-app-backend-4.onrender.com");
             const data = await res.json();
 
           // Save in state
