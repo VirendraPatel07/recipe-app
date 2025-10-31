@@ -48,7 +48,7 @@ function Home() {
           // Flatten the array of arrays
           // const combined = results.flat();
   
-            const res = await fetch("http://recipe-app-backend-4.onrender.com/vegetable");
+            const res = await fetch("https://recipe-app-backend-4.onrender.com/vegetable");
             const data = await res.json();
 
           // Save in state
