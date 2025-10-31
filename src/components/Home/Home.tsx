@@ -9,7 +9,6 @@ function Home() {
   // const dispatch = useDispatch<typeof import('../../redux/store').store.dispatch>();
   const recipeData = useSelector((state: any) => state.app.recipes);
   const status = useSelector((state: { app: { status: string } }) => state.app.status);
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
   const [filteredData, setFilteredData] = useState<any[] | false>(false);
   const [boughtItems, setBoughtItems] = useState<any[]>([]);
   const [savedData, setSavedData] = useState<any[]>([]);
