@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom';
-import { createBoughtItemDTO } from './domain/home-model';
+import { createBoughtItemDTO, Item } from './domain/home-model';
 
 function Home() {
   //const [count, setCount] = useState(0)
@@ -48,7 +48,7 @@ function Home() {
           // Flatten the array of arrays
           // const combined = results.flat();
   
-            const res = await fetch("https://recipe-app-backend-4.onrender.com/vegetable");
+            const res = await fetch("https://localhost:8080/vegetable");
             const data = await res.json();
 
           // Save in state
@@ -179,7 +179,7 @@ function Home() {
                     <h3 className='font-bold mb-2'>{item.vegetableName}</h3>
                     <div className='flex items-center mb-2'>
                       <h2>Price : </h2>
-                      <h2 className='font-semibold items-center ml-2'>{item.price}</h2>
+                      <h2 className='font-semibold items-center ml-2'>{item.price} Rs </h2>
                     </div>
                   </NavLink>
                   <input
@@ -216,10 +216,14 @@ function Home() {
                           const quantityValue = (document.getElementById(`quantity-${item.id}`) as HTMLInputElement | null)?.value?.trim();
                           const quantityNumber = quantityValue ? parseInt(quantityValue, 10) : 100;
 
-                          const boughtItem = createBoughtItemDTO(item, 100, quantityNumber);
+                          const boughtItem = createBoughtItemDTO(item, item.price, quantityNumber);
                           //console.log(boughtItem);
+                          if(boughtItems.find((bought) => bought.id === boughtItem.id)){
+                            alert(`You have already added "${item.vegetableName}" to cart!`);
+                            return;
+                          }
                           setBoughtItems([...boughtItems, boughtItem]);
-
+                          //console.log(boughtItems);
                           //document.cookie = `cart=${JSON.stringify(boughtItems)}; path[]=/; max-age=86400`; // Cookie expires in 1 day
                           const addToCartButton = document.getElementById(`add-to-cart-${item.id}`);
                           if (addToCartButton) {

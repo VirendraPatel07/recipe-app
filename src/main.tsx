@@ -7,6 +7,7 @@ import App from './App.tsx'
 import Home from './components/Home/Home.tsx'
 import Recipe from './components/Recipe/Recipe.tsx'
 import Cart from './components/Cart/Cart.tsx'
+import Login from './components/Login/Login.tsx'
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
         path: 'cart',
         element: <Cart/>,
       },
+      {
+        path: 'login',
+        element: <Login/>,
+      }
     ]
   }
 ])

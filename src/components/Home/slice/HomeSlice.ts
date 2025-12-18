@@ -3,7 +3,13 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 export const fetchRecipes = createAsyncThunk<any[], string>(
     'recipe/fetchRecipes',
     async (recipe) => {
-        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${recipe}`);
+        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${recipe}`,
+            { method: 'GET' 
+
+
+
+            }
+        );
         if(!response.ok){
             throw new Error('Sorry, we could not find any recipe for you!');
         }

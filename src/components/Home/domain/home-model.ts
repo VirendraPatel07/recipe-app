@@ -47,22 +47,22 @@ export interface Item{
 // })
 
 export interface BoughtItemDTO {
-    idMeal: string;
-    strMeal: string;
-    strMealThumb: string;
+    id: string;
+    vegetableName: string;
+    vegetableImage: string;
     price: number;
     quantity: number;
   }
   
   // Assuming `item` is an object that has idMeal, strMeal, and strMealThumb
   export const createBoughtItemDTO = (
-    item: { idMeal: string; strMeal: string; strMealThumb: string },
+    item: { id: string; vegetableName: string; vegetableImage: string },
     price: number,
     quantity: number
   ): BoughtItemDTO => ({
-    idMeal: item.idMeal,
-    strMeal: item.strMeal,
-    strMealThumb: item.strMealThumb,
+    id: item.id,
+    vegetableName: item.vegetableName,
+    vegetableImage: item.vegetableImage,
     price,
     quantity,
   });

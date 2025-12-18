@@ -64,6 +64,7 @@ function Header() {
                         <li><NavLink to='/terms-of-service'>Terms of Service</NavLink></li>
                         <li><NavLink to='/help'>Help</NavLink></li>
                         <li><NavLink to='/cart'>Cart</NavLink></li>
+                        <li><NavLink to='/login'>Login</NavLink></li>
                     </ul>
                 ) : (
                     <button
